@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Extends test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/String.extends.js"></script>
+
+	<script type="text/javascript" charset="UTF=8">
+		$(document).ready(function(){
+
+			test("指定したHTMLタグを有効化: string.sanitize", function(){
+				equal(
+								(function(){
+									var str = "<h1>Hello, World</h1>";
+									return str.sanitize(["h1"]);
+								})(),
+								"<h1>Hello, World</h1>",
+								"h1タグのみ"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1 data=\"attr\" class=\"thisclass\">Hello, World</h1>";
+									return str.sanitize(["h1"]);
+								})(),
+								"<h1 data=\"attr\" class=\"thisclass\">Hello, World</h1>",
+								"h1タグ属性をつけてみる"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1>Hello</h1><p>World</p>";
+									return str.sanitize(["h1"]);
+								})(),
+								"<h1>Hello</h1>&lt;p&gt;World&lt;/p&gt;",
+								"pを混ぜてみる h1タグのみ"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1>Hello<p>World</p></h1>";
+									return str.sanitize(["h1"]);
+								})(),
+								"<h1>Hello<p>World</p></h1>",
+								"ネストしてみる: h1"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1>Hello<p>World</p></h1>";
+									return str.sanitize(["p"]);
+								})(),
+								"&lt;h1&gt;Hello<p>World</p>&lt;/h1&gt;",
+								"ネストしてみる: p"
+				);
+
+				equal(
+								(function(){
+									var str = "<ul><li>A</li><li>B</li><li>C</li></ul>";
+									return str.sanitize(["li"]);
+								})(),
+								"&lt;ul&gt;<li>A</li><li>B</li><li>C</li>&lt;/ul&gt;",
+								"複数抽出する"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1>Hello</h1>\n<p>World</p>\n<a href=\"#\">This is Anchor</a>";
+									return str.sanitize(["h1", "a"]);
+								})(),
+								"<h1>Hello</h1>\n&lt;p&gt;World&lt;/p&gt;\n<a href=\"#\">This is Anchor</a>",
+								"改行を含める"
+				);
+
+				equal(
+								(function(){
+									var str = "<a href\"javascript:void(0)\">click me</a>";
+									return str.sanitize(["a"]);
+								})(),
+								"&lt;a href&quot;javascript:void(0)&quot;&gt;click me&lt;/a&gt;",
+								"javascriptを入れてみる"
+				);
+
+				equal(
+								(function(){
+									var str = "<h1>Hello, World</h1>";
+									return str.sanitize(["a", "p"]);
+								})(),
+								"&lt;h1&gt;Hello, World&lt;/h1&gt;",
+								"存在しないタグを指定する"
+				);
+			});
+
+			test("ランダムな文字列を生成: string.randomize", function(){
+				notEqual(
+								"hello",
+								(function(){
+									var str = "";
+									str.randomize(5);
+									return str;
+								})(),
+								"hello以外の文字"
+				);
+
+				equal(
+								5,
+								(function(){
+									var str = "";
+									str = str.randomize(5);
+									return str.length;
+								})(),
+								"ランダムな文字列の長さが指定通りか"
+
+				);
+			});
+
+			test("HTMLエンティティ化:string.htmlspecialchars()", function(){
+				equal(
+								"&lt;h1&gt;Hello, World!&lt;/h1&gt;",
+								(function(){
+									var str = "<h1>Hello, World!</h1>";
+									return str.htmlspecialchars();
+								})(),
+								"HTMLエンティティ"
+				);
+			});
+
+			test("HTMLエンティティデコード:string.htmlspecialchars_decode()", function(){
+				equal(
+								"<h1>Hello, World!</h1>",
+								(function(){
+									var str = "&lt;h1&gt;Hello, World!&lt;/h1&gt;";
+									return str.htmlspecialchars_decode();
+								})(),
+								"HTMLエンティティデコード"
+				);
+			});
+
+
+			test("一文字ごとのイテレート", function(){
+				equal(
+								"aebecede",
+								(function(){
+									var str = "abcd";
+									var target = "";
+									str.each(function(i){
+										target += this.valueOf() + "e";
+									});
+									return target;
+								})(),
+								"一文字ごとにeを足す"
+				);
+
+				equal(
+								"aebecd",
+								(function(){
+									var str = "abcd";
+									var target = "";
+
+									str.each(function(i){
+										if( i < 2 ){
+											target += this.valueOf() + "e";
+										}else{
+											target += this.valueOf()
+										}
+									});
+									return target;
+								})(),
+								"インデックスを条件に分岐"
+				);
+
+				equal(
+								"aebe",
+								(function(){
+									var str = "abcd";
+									var target = "";
+									str.each(function(i){
+										if( i > 1 ) return true;
+										target += this.valueOf() + "e"
+									});
+									return target;
+								})(),
+								"ブレークテスト"
+				);
+			});
+
+			test("一行ごとのイテレート", function(){
+				equal(
+								"aaaaae\r\nbbbbbe\r\ncccccce\r\nddddde\r\n",
+								(function(){
+									var str = "aaaaa\r\nbbbbb\r\ncccccc\r\nddddd\r\n";
+									var target = "";
+
+									str.eachline(function(i){
+										target += this.valueOf() + "e" + "\r\n";
+									});
+
+									return target;
+								})(),
+								"行末にeを足す(CRLF)"
+				);
+				equal(
+								"aaaaae\rbbbbbe\rcccccce\rddddde\r",
+								(function(){
+									var str = "aaaaa\rbbbbb\rcccccc\rddddd\r";
+									var target = "";
+
+									str.eachline(function(i){
+										target += this.valueOf() + "e" + "\r";
+									});
+
+									return target;
+								})(),
+								"行末にeを足す(CR)"
+				);
+				equal(
+								"aaaaae\nbbbbbe\ncccccce\nddddde\n",
+								(function(){
+									var str = "aaaaa\nbbbbb\ncccccc\nddddd\n";
+									var target = "";
+
+									str.eachline(function(i){
+										target += this.valueOf() + "e" + "\n";
+									});
+
+									return target;
+								})(),
+								"行末にeを足す(LF)"
+				);
+			});
+
+			test("指定桁で省略: string.truncate", function(){
+				var str = "いろはにほへとちりぬるをわにわに";
+
+				equal(
+								"...ちりぬるを...",
+								(function(){
+									return str.truncate(11, 7);
+								})(),
+								"両方あるパターン"
+				);
+
+				equal(
+								"いろはに...",
+								(function(){
+									return str.truncate(7);
+								})(),
+								"両方あるパターン"
+				);
+
+				equal(
+								str,
+								(function(){
+									return str.truncate(100);
+								})(),
+								"桁数以上"
+				)
+			});
+
+			test("改行を空白に変換: string.singleline", function(){
+				equal(
+								"aaaaa bbbbb ccccc ddddd",
+								(function(){
+									var str = "aaaaa\r\nbbbbb\r\nccccc\r\nddddd";
+									return str.singleline();
+								})(),
+								"CRLF"
+				);
+
+				equal(
+								"aaaaa bbbbb ccccc ddddd",
+								(function(){
+									var str = "aaaaa\rbbbbb\rccccc\rddddd";
+									return str.singleline();
+								})(),
+								"CR"
+				);
+
+				equal(
+								"aaaaa bbbbb ccccc ddddd",
+								(function(){
+									var str = "aaaaa\nbbbbb\nccccc\nddddd";
+									return str.singleline();
+								})(),
+								"LF"
+				);
+			});
+
+			test("改行をとる: string.chomp", function(){
+				equal(
+								"aaaaabbbbbcccccddddd",
+								(function(){
+									var str = "aaaaa\r\nbbbbb\r\nccccc\r\nddddd";
+									return str.chomp();
+								})(),
+								"CRLF"
+				);
+				equal(
+								"aaaaabbbbbcccccddddd",
+								(function(){
+									var str = "aaaaa\rbbbbb\rccccc\rddddd";
+									return str.chomp();
+								})(),
+								"CR"
+				);
+				equal(
+								"aaaaabbbbbcccccddddd",
+								(function(){
+									var str = "aaaaa\nbbbbb\nccccc\nddddd";
+									return str.chomp();
+								})(),
+								"LF"
+				);
+			});
+
+			test("email書式かどうか", function(){
+				equal(
+								true,
+								(function(){
+									var str = "hosokawa@4digit.jp";
+									return str.is_email();
+								})(),
+								"合っている場合"
+				);
+				equal(
+								false,
+								(function(){
+									var str = "http://creativesurvey.jp/";
+									return str.is_email();
+								})(),
+								"間違っている場合"
+				);
+			});
+
+			test("HTTP書式かどうか", function(){
+				equal(
+								true,
+								(function(){
+									var str = "http://creativesurvey.jp/";
+									return str.is_http();
+								})(),
+								"合っている場合"
+				);
+				equal(
+								false,
+								(function(){
+									var str = "hosokawa@4digit.jp";
+									return str.is_http();
+								})(),
+								"間違っている場合"
+				);
+			});
+
+		});
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

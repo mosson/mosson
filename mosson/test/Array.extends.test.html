@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Array extends test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/Array.extends.js"></script>
+	<script type="text/javascript" charset="UTF=8">
+		$(function(){
+			test("配列から空の要素を取り除く関数: compact", function(){
+				deepEqual( [1, 2, 3], (function(){
+					var arr = [1, null, 2, null, null, 3];
+					return arr.compact();
+				})());
+				expect( 1 );
+			});
+
+			test("配列の並び順を逆にする関数: reverse", function(){
+				deepEqual( [3, 2, 1], (function(){
+					var arr = [1, 2, 3];
+					return arr.reverse();
+				})());
+			});
+
+			test("配列の要素をイテレートする関数: each", function(){
+				deepEqual(
+								(function(){
+									var arr = [1, 2, 3];
+									arr.each( function(index){
+										arr[index] = this.valueOf() * 2;
+									});
+									return arr;
+								})(),
+								[2, 4, 6],
+								"イテレートしきる"
+				);
+
+				deepEqual(
+								(function(){
+									var arr = [1, 2, 3];
+									arr.each( function(index){
+										if( index != 1 )
+											arr[index] = this.valueOf() * 2;
+									});
+									return arr;
+								})(),
+								[2, 2, 6],
+								"インデックスの確認"
+				);
+
+				deepEqual(
+								(function(){
+									var arr = [1, 2, 3];
+									arr.each( function(index){
+										if( index > 1 ) return true;
+										arr[index] = this.valueOf() * 2;
+									});
+									return arr;
+								})(),
+								[2, 4, 3],
+								"ブレークの確認"
+				);
+
+				deepEqual(
+								(function(){
+									var arr = ["appl", "orang", "banana"];
+									arr.each(function(i){
+										arr[i] = this.valueOf() + "e";
+									});
+									return arr;
+								})(),
+								["apple", "orange", "bananae"],
+								"文字列を格納"
+				);
+
+				deepEqual(
+								(function(){
+									var arr = [1, 2, 3];
+									arr.each(function(i, container){
+										container[i] = this.valueOf() * 2;
+									});
+									return arr;
+								})(),
+								[2, 4, 6],
+								"自身の参照を呼び出す"
+				);
+
+				deepEqual(
+								(function(){
+									var arr = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
+
+									arr.each(function(i, container){
+										this.valueOf().each(function(j, container2){
+											container2[j] = this.valueOf() + 1;
+										});
+									});
+
+									return arr;
+
+								})(),
+								[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+								"ネスト例"
+				)
+
+			});
+
+			test("重複する要素を削除: array.uniq()", function(){
+				deepEqual(
+								(function(){
+									var arr = [1, 1, 2, 2, 3, 2, 3, 1, 2];
+									return arr.uniq();
+								})(),
+								[1, 2, 3]
+				);
+			});
+
+			test("配列をランダムにシャッフル:array.shuffle()", function(){
+				notDeepEqual(
+								(function(){
+									var arr = [1, 2, 3];
+									return arr.shuffle();
+								})(),
+								[1, 2, 3],
+								"シャッフルする: !!シャッフルしないこともある"
+				)
+			});
+
+			test("配列の要素のインデックスを取得する: array.indexOf", function(){
+				equal(
+								(function(){
+									var arr = [1, 2, 3, 2, 1];
+									return arr.indexOf(2);
+								})(),
+								1,
+								"2のインデックス"
+				);
+
+				equal(
+								(function(){
+									var arr = [1, 2, 3, 2, 1];
+									return arr.indexOf(12);
+								})(),
+								-1,
+								"該当する要素がない場合"
+				);
+			});
+
+			test("配列の要素のインデックスを取得する: array.lastIndexOf", function(){
+				equal(
+								(function(){
+									var arr = [1, 2, 3, 2, 1];
+									return arr.lastIndexOf(2);
+								})(),
+								3,
+								"2のインデックス"
+				);
+
+				equal(
+								(function(){
+									var arr = [1, 2, 3];
+									return arr.lastIndexOf(12)
+								})(),
+								-1,
+								"該当する要素がない場合"
+				);
+			});
+
+		});
+
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

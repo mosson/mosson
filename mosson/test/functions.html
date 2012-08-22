@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Extends test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/functions.js"></script>
+
+	<script type="text/javascript" charset="UTF=8">
+		$(document).ready(function(){
+			var Animal, Dog, AkitaDog;
+
+			Animal = (function(){
+				function Animal(name){
+					this.name = name;
+					this.generation = 1;
+				}
+
+				Animal.prototype.say = function(){
+					this.message = this.name + " is Animal";
+				}
+
+				return Animal;
+
+			})();
+
+			Dog = (function(_super){
+				__extends(Dog, _super);
+
+				function Dog(name){
+					Dog.__super__.constructor.call(this, name);
+					this.generation = 2;
+				}
+
+				Dog.prototype.say = function(){
+					this.message = "";
+					Dog.__super__.say.call(this);
+					this.message = this.message + " and Dog";
+				}
+
+				return Dog;
+
+			})(Animal);
+
+
+			AkitaDog = (function(_super){
+				__extends(AkitaDog, _super);
+
+				function AkitaDog(name){
+					AkitaDog.__super__.constructor.call(this, name);
+					this.generation = 3;
+					this.attr = "kawaii";
+				}
+
+				AkitaDog.prototype.say = function(){
+					this.message = "";
+					AkitaDog.__super__.say.call(this);
+					this.message = this.message + " and AkitaDog";
+				}
+
+				return AkitaDog;
+			})(Dog);
+
+			var akitadog = new AkitaDog("toshizou");
+
+			test("継承を実現するメソッド:__extend(child, super)", function(){
+				equal(
+								(function(){
+									akitadog.say();
+									return akitadog.message;
+								})(),
+								"toshizou is Animal and Dog and AkitaDog",
+								"多重継承"
+				);
+			});
+
+		});
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

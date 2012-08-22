@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Color test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/Color.js"></script>
+	<script type="text/javascript" charset="UTF=8">
+		$(function(){
+			test("カラークラステスト", function(){
+				var c = new Color( 155, 52, 74 );
+
+				equal(
+								155,
+								(function(){
+									return c.getR();
+								})(),
+								"getR"
+				);
+
+				equal(
+								52,
+								(function(){
+									return c.getG();
+								})(),
+								"getG"
+				);
+
+				equal(
+								74,
+								(function(){
+									return c.getB();
+								})(),
+								"getB"
+				);
+
+
+				equal(
+								"#9b344a",
+								(function(){
+									return c.getColorString()
+								})(),
+								"初期宣言の色を16進数に置き換える"
+				);
+
+				equal(
+								347,
+								(function(){
+									return Math.round(c.H)
+								})(),
+								"初期宣言の色のH"
+				);
+
+				equal(
+								347,
+								(function(){
+									return Math.round(c.getH())
+								})(),
+								"getR"
+				);
+
+				equal(
+								0.66,
+								(function(){
+									return Math.round(c.S*100)/100
+								})(),
+								"初期宣言の色のS"
+				);
+
+				equal(
+								0.66,
+								(function(){
+									return Math.round(c.getS()*100)/100
+								})(),
+								"初期宣言の色のS"
+				);
+
+				equal(
+								0.61,
+								(function(){
+									return Math.round(c.V*100)/100
+								})(),
+								"初期宣言の色のS"
+				);
+
+				equal(
+								0.61,
+								(function(){
+									return Math.round(c.getV()*100)/100
+								})(),
+								"初期宣言の色のS"
+				);
+
+				c.H = 100;
+				c.S = 0.4;
+				c.V = 0.2;
+				c.recalculateFromHSV();
+
+				equal(
+								37,
+								(function(){
+									return Math.round(c.R)
+								})(),
+								"色をかえた後のR"
+				);
+
+				equal(
+								51,
+								(function(){
+									return Math.round(c.G)
+								})(),
+								"色をかえた後のG"
+				);
+
+				equal(
+								31,
+								(function(){
+									return Math.round(c.B)
+								})(),
+								"色をかえた後のB"
+				);
+
+
+			});
+		});
+
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

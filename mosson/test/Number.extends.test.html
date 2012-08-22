@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Number extends test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/Number.extends.js"></script>
+
+	<script type="text/javascript" charset="UTF=8">
+		$(document).ready(function(){
+			test("3桁おきにカンマをふる", function(){
+					equal(
+									(function(){
+										var n = 100000000;
+										return n.delimiterize();
+									})(),
+									"100,000,000"
+					);
+
+					equal(
+									(function(){
+										var n = 1748724458;
+										return n.delimiterize();
+									})(),
+									"1,748,724,458"
+					);
+
+					equal(
+									(function(){
+										var n = 100;
+										return n.delimiterize();
+									})(),
+									"100",
+									"カンマをつける必要がないものの挙動"
+					)
+			});
+
+			test("0パディングをつける", function(){
+				equal(
+								(function(){
+									var n = 100;
+									return n.paddingToString(4);
+								})(),
+								"0100",
+								"0を足す費用がある場合"
+				);
+
+
+				equal(
+								(function(){
+									var n = 100;
+									return n.paddingToString(3);
+								})(),
+								"100",
+								"0を足す必要がない場合"
+				);
+
+				equal(
+								(function(){
+									var n = 100;
+									return n.paddingToString(2);
+								})(),
+								"100",
+								"オリジナルより短い場合"
+				);
+			});
+
+			test("ミリ秒を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.milliseconds();
+								})(),
+								5,
+								"milliseconds"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.millisecond();
+								})(),
+								5,
+								"millisecond"
+				);
+			});
+
+			test("秒を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.seconds();
+								})(),
+								5 * 1000,
+								"secondS"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.second();
+								})(),
+								5 * 1000,
+								"second"
+				)
+			});
+
+			test("分を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.minutes();
+								})(),
+								5 * 1000 * 60,
+								"minuteS"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.minutes();
+								})(),
+								5 * 1000 * 60,
+								"minute"
+				);
+			});
+
+			test("時を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.hours();
+								})(),
+								5 * 1000 * 60 * 60,
+								"hours"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.hour()
+								})(),
+								5 * 1000 * 60 * 60,
+								"hour"
+				);
+			});
+
+
+			test("日を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.days();
+								})(),
+								5 * 1000 * 60 * 60 * 24,
+								"days"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.day();
+								})(),
+								5 * 1000 * 60 * 60 * 24,
+								"day"
+				);
+			});
+
+
+			test("週を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.weeks();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 7,
+								"weeks"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.week();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 7,
+								"week"
+				);
+			});
+
+
+			test("月を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.months();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 31,
+								"months"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.month();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 31,
+								"month"
+				);
+			});
+
+			test("年を返す", function(){
+				equal(
+								(function(){
+									var n = 5;
+									return n.years();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 365,
+								"years"
+				);
+
+				equal(
+								(function(){
+									var n = 5;
+									return n.years();
+								})(),
+								5 * 1000 * 60 * 60 * 24 * 365,
+								"year"
+				);
+			});
+
+			test("直感的に時間を取得する", function(){
+				equal(
+								(function(){
+									var n = 28;
+									return n.days().after();
+								})(),
+								(function(){
+									var c = new Date();
+									var n = new Date();
+									return n.setDate(c.getDate() + 28 );
+								})(),
+								"28日後"
+				);
+
+				equal(
+								(function(){
+									var n = 3;
+									return n.seconds().ago();
+								})(),
+								(function(){
+									var c = new Date();
+									var n = new Date();
+									return n.setSeconds( c.getSeconds() - 3 );
+								})(),
+								"3秒前"
+				);
+			});
+
+		});
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

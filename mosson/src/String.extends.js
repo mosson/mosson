@@ -222,14 +222,10 @@ if( String.prototype.parseCSV === undefined ){
 	String.prototype.parseCSV = function(){
 		var src = this.valueOf().flatReturn();
 		var csv = src.split("\n").each(function(i, container){
-			container[i] = this.split(",");
+			container[i] = this.replace(/\\,/igm, "____").split(",");
 			container[i].each(function(j, cols){
-				if( /\"/.test(this.valueOf()) ){
-					if( cols[j+1] && /\"/.test(cols[j+1].valueOf()) ){
-						cols[j] = (cols[j].valueOf() + "," + cols[j+1].valueOf()).replace(/\"/g, "");
-						cols.splice(j+1, 1);
-						return -1;
-					}
+				if( /____/.test(this.valueOf())){
+					cols[j] = this.valueOf().replace(/____/igm, ",");
 				}
 			});
 		});

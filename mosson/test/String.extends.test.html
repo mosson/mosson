@@ -371,19 +371,41 @@
 			test("CSVをパースして配列に置き換える: string.parseCSV", function(){
 				deepEqual(
 								(function(){
-									var csv = "1,2,3,4,5\r\"a,b\",c,d,e,f"
+									var csv = "1,2,3,4,5\ra\\,b,c,d,e,f"
+									return csv.parseCSV();
+								})(),
+								[
+									["1","2", "3", "4", "5"],
+									["a,b", "c", "d", "e", "f"]
+								],
+								"カンマを含むセルあり : CR"
+				);
+
+				deepEqual(
+								(function(){
+									var csv = "1,2,3,4,5\na\\,b,c,d,e,f"
 									return csv.parseCSV();
 								})(),
 								[
 									["1", "2", "3", "4", "5"],
 									["a,b", "c", "d", "e", "f"]
 								],
-								"カンマを含むセルあり : CR"
-				)
+								"カンマを含むセルあり : LF"
+				);
+
+				deepEqual(
+								(function(){
+									var csv = "1,2,3,4,5\r\na\\,b,c,d,e,f"
+									return csv.parseCSV();
+								})(),
+								[
+									["1", "2", "3", "4", "5"],
+									["a,b", "c", "d", "e", "f"]
+								],
+								"カンマを含むセルあり : CRLF"
+				);
 
 			});
-
-
 
 		});
 	</script>

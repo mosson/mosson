@@ -102,3 +102,33 @@ if( Array.prototype.lastIndexOf === undefined ){
 		return -1;
 	}
 }
+
+/**
+ * CSV作成
+ *
+ * @return String
+ */
+
+if( Array.prototype.toCSV === undefined ){
+	Array.prototype.toCSV = function(){
+
+		var rows = [];
+		this.valueOf().each(function(l){
+			if( !this instanceof Array ) throw new Error("toCSV needs square dimension array");
+
+			var cols = [];
+			this.valueOf().each(function(i){
+				if( /\,/.test(this.valueOf()) ){
+					cols[i] = "\"" + this.valueOf() + "\""
+				}
+				else{
+					cols[i] = this.valueOf()
+				}
+			});
+			rows[l] = cols.join(",");
+		});
+		return rows.join("\n");
+	}
+}
+
+

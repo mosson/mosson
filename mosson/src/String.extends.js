@@ -221,14 +221,26 @@ if( String.prototype.flatReturn === undefined ){
 if( String.prototype.parseCSV === undefined ){
 	String.prototype.parseCSV = function(){
 		var src = this.valueOf().flatReturn();
-		var csv = src.split("\n").each(function(i, container){
-			container[i] = this.replace(/\\,/igm, "____").split(",");
-			container[i].each(function(j, cols){
-				if( /____/.test(this.valueOf())){
-					cols[j] = this.valueOf().replace(/____/igm, ",");
-				}
-			});
+
+		var csv = [], rowIndex = 0, colIndex = 0, buf = "", flg = false;
+		src.each(function(i, container){
+			if( this.valueOf() == "\"" ) flg = !flg;
+
+			if( this.valueOf() == "\n" && !flg ){
+				rowIndex ++;
+				colIndex = 0;
+				return;
+			}
+
+			if( this.valueOf() == "," && container[i-1] != "\\" && !flg ){
+				colIndex ++;
+				return;
+			}
+			if( csv[rowIndex] === undefined ) csv[rowIndex] = [];
+			if( csv[rowIndex][colIndex] === undefined ) csv[rowIndex][colIndex] = "";
+			csv[rowIndex][colIndex] += this.valueOf();
 		});
+
 		return csv;
 	}
 }

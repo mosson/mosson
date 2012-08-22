@@ -2,13 +2,13 @@ mosson javascript utilities
 ======================
 基本クラスをAction Helperっぽく拡張しています。
  
-使い方
+USAGE
 ------
 test/を参照してください。
 testにはqunitが必要です。
 
  
-ライセンス
+LICENSE
 ----------
 Copyright &copy; 2012 mosson
 Distributed under the [MIT License][mit].

@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
 	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
 
+	<script type="text/javascript" charset="UTF-8" src="../src/Array.extends.js"></script>
 	<script type="text/javascript" charset="UTF-8" src="../src/String.extends.js"></script>
 
 	<script type="text/javascript" charset="UTF=8">
@@ -355,6 +356,34 @@
 								"間違っている場合"
 				);
 			});
+
+			test("改行コードをLFに統一する:string.flatReturn", function(){
+				equal(
+								(function(){
+									var str = "aaaaaa\r\nbbbbb\rcccccc\ndddddd";
+									return str.flatReturn();
+								})(),
+								"aaaaaa\nbbbbb\ncccccc\ndddddd",
+								"混合"
+				);
+			});
+
+			test("CSVをパースして配列に置き換える: string.parseCSV", function(){
+				deepEqual(
+								(function(){
+									var csv = "1,2,3,4,5\r\"a,b\",c,d,e,f"
+									return csv.parseCSV();
+								})(),
+								[
+									["1", "2", "3", "4", "5"],
+									["a,b", "c", "d", "e", "f"]
+								],
+								"カンマを含むセルあり : CR"
+				)
+
+			});
+
+
 
 		});
 	</script>

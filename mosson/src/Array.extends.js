@@ -37,7 +37,9 @@ if( Array.prototype.each === undefined ){
 
 		var i, len;
 		for( i = 0, len = this.length; i < len; i++ ){
-			if( callback.call(this[i], i, this) ) break;
+			var status = callback.call(this[i], i, this);
+			if( status < 0 ) i -= 1
+			else if( status !== undefined && status !== null ) break
 		}
 		return this;
 	}

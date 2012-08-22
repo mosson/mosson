@@ -1,11 +1,4 @@
 /**
- *  JSON.stringfy
- *  CSV.parse
- *  sanitize
- *
- */
-
-/**
  * ランダムな文字列化(0-zまで)
  */
 
@@ -106,7 +99,9 @@ if( String.prototype.each === undefined ){
 		if( typeof(callback) != "function" ) throw new Error("String.prototype.each function needs callback is function");
 		var i, len;
 		for( i = 0, len = this.length; i < len; i++ ){
-			if( callback.call(this[i], i, this) ) break;
+			var status = callback.call(this[i], i, this);
+			if( status < 0 ) i -= 1
+			else if( status !== undefined && status !== null ) break
 		}
 		return this;
 	}
@@ -126,7 +121,9 @@ if( String.prototype.eachline == undefined ){
 		var arr = this.match(/.+/img);
 		var i, len;
 		for( i = 0, len = arr.length; i < len; i++ ){
-			if( callback.call( arr[i], i, len, arr ) ) break;
+			var status = callback.call( arr[i], i, len, arr );
+			if( status < 0 ) i -= 1
+			else if( status !== undefined && status !== null ) break
 		}
 
 		return this;
@@ -202,5 +199,40 @@ if( String.prototype.is_http === undefined ){
 		}else{
 			return false;
 		}
+	}
+}
+
+/**
+ * force LF
+ */
+
+if( String.prototype.flatReturn === undefined ){
+	String.prototype.flatReturn = function(){
+		var str = this.valueOf();
+		return str.split("\r\n").join("\n").split("\r").join("\n");
+	}
+}
+
+/**
+ * require Array.extends.js
+ * @return Array
+ */
+
+if( String.prototype.parseCSV === undefined ){
+	String.prototype.parseCSV = function(){
+		var src = this.valueOf().flatReturn();
+		var csv = src.split("\n").each(function(i, container){
+			container[i] = this.split(",");
+			container[i].each(function(j, cols){
+				if( /\"/.test(this.valueOf()) ){
+					if( cols[j+1] && /\"/.test(cols[j+1].valueOf()) ){
+						cols[j] = (cols[j].valueOf() + "," + cols[j+1].valueOf()).replace(/\"/g, "");
+						cols.splice(j+1, 1);
+						return -1;
+					}
+				}
+			});
+		});
+		return csv;
 	}
 }

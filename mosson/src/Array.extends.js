@@ -1,4 +1,14 @@
 /**
+ * ネストした配列を平坦にする: array.flatten
+ **/
+
+if( Array.prototype.flatten === undefined ){
+	Array.prototype.flatten = function(){
+		return Array.prototype.concat.apply([], this);
+	}
+}
+
+/**
  * null, undefinedを削除してつめる: 非破壊
  */
 

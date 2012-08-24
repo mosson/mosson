@@ -11,6 +11,22 @@
 	<script type="text/javascript" charset="UTF-8" src="../src/Array.extends.js"></script>
 	<script type="text/javascript" charset="UTF=8">
 		$(function(){
+
+			test("ネストした配列を平坦にする関数: flatten", function(){
+				deepEqual(
+								(function(){
+									var arr = [
+										[1, 2, 3],
+										[4, 5, 6],
+										[7, 8, 9]
+									];
+									return arr.flatten();
+								})(),
+								[1, 2, 3, 4, 5, 6, 7, 8, 9],
+								"flatten"
+				);
+			});
+
 			test("配列から空の要素を取り除く関数: compact", function(){
 				deepEqual( [1, 2, 3], (function(){
 					var arr = [1, null, 2, null, null, 3];
@@ -104,8 +120,7 @@
 								})(),
 								[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
 								"ネスト例"
-				)
-
+				);
 			});
 
 			test("重複する要素を削除: array.uniq()", function(){

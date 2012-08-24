@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+				"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Array extends test</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../qunit/qunit.css" />
+	<script type="text/javascript" charset="UTF-8" src="../../qunit/qunit.js"></script>
+
+	<script type="text/javascript" charset="UTF-8" src="../src/Object.extends.js"></script>
+	<script type="text/javascript" charset="UTF=8">
+		$(function(){
+			test("配列を走査する関数:object.forEach", function(){
+				deepEqual(
+								(function(){
+									var obj = {
+										a: 0,
+										b: 1,
+										c: 2
+									};
+
+									obj.forEach(function(key, value, container){
+										container[key] = value + 1;
+									});
+
+									return obj;
+								})(),
+								new Object({
+									a: 1,
+									b: 2,
+									c: 3
+								}),
+								"整数値"
+				);
+			});
+
+		});
+
+	</script>
+</head>
+<body>
+
+<div id="qunit"></div>
+
+</body>
+</html>

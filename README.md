@@ -1,6 +1,6 @@
 mosson javascript utilities
 ======================
-基本クラスをAction Helperっぽく拡張しています。
+基本クラスの拡張をやりすぎない程度に
  
 USAGE
 ------
